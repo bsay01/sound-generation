@@ -79,22 +79,24 @@ if __name__ == '__main__':
 
     plt.show()
 
+    output_dir = "data_sg/"
+
     try:
-        sf.write("output/" + "hrm.wav", hrm_signal_ADSR, ex_sr)
+        sf.write(output_dir + "hrm.wav", hrm_signal_ADSR, ex_sr)
     except:
         sf.write("hrm.wav", hrm_signal_ADSR, ex_sr)
 
     try:
-        sf.write("output/" + "sin.wav", sin_signal_ADSR, ex_sr)
+        sf.write(output_dir + "sin.wav", sin_signal_ADSR, ex_sr)
     except:
         sf.write("sin.wav", sin_signal_ADSR, ex_sr)
 
     try:
-        sf.write("output/" + "tri.wav", tri_signal_ADSR, ex_sr)
+        sf.write(output_dir + "tri.wav", tri_signal_ADSR, ex_sr)
     except:
         sf.write("tri.wav", tri_signal_ADSR, ex_sr)
 
     try:
-        fig.savefig("output/" + PLOT_TITLE + ".png")
+        fig.savefig(output_dir + PLOT_TITLE + ".png")
     except:
         fig.savefig(PLOT_TITLE + ".png")

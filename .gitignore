@@ -1,18 +1,13 @@
 __pycache__
 
-output/**
-!output/placeholder.md
+data_img/**
+!data_img/placeholder.md
 
-output/rand/**
-!output/rand/placeholder.md
+data_rand/**
+!data_rand/placeholder.md
 
-output/img/**
-!output/img/placeholder.md
+data_sg/**
+!data_sg/placeholder.md
 
-# ignore input and output data
-data/**
-data_processed/**
-
-# but keep input and output data folders
-!data/0-info.md
-!data_processed/0-info.md
+data_drums/**
+!data_drums/placeholder.md

@@ -7,7 +7,7 @@ import math, winsound, time
 
 SAMPLE_RATE = 44100
 ns_dur = [50, 300] # note duration range
-output_dir = "output/img/"
+output_dir = "data_img/"
 
 def RGB_to_HEXstr(R, G, B):
     h_n = [math.floor(R/16), R%16, math.floor(G/16), G%16, math.floor(B/16), B%16]
@@ -92,12 +92,12 @@ def main():
     ns_opt0 = [float(i/4) for i in ns_opt2]
     ns_options = ns_opt0 + ns_opt1 + ns_opt2
 
-    with Image.open("josie.jpg") as im:
+    with Image.open("data_img/josie.jpg") as im:
         # (left, upper, right, lower)
         im_crop = im.crop((220, 700, 800, 720))
-        im_crop.save("josie_eyes.jpg")
+        im_crop.save("data_img/josie_eyes.jpg")
 
-    px_a = image_to_px_array("josie_eyes") # turn image into an array of pixel colour data
+    px_a = image_to_px_array("data_img/josie_eyes") # turn image into an array of pixel colour data
 
     hexval_a = []
     for px_row in px_a:
@@ -135,7 +135,7 @@ def main():
 
     print("\nbegin processing {} rows of image data.".format(len(px_a)))
 
-    winsound.Beep(220, 500)
+    winsound.Beep(440, 500)
     sound_pt_start = time.time()
 
     for img_row in range(len(px_a)):
@@ -176,6 +176,7 @@ def main():
         # except:
         #     sf.write(str(img_row) + "_tri_rand.wav", tri, SAMPLE_RATE)
 
+        winsound.Beep(220, 500)
         t_p = time.time() - pt_start
         print("processing time: {:0.2f} sec ({:0.2f} min)".format(t_p, t_p/60))
 
