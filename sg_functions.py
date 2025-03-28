@@ -1,5 +1,7 @@
 import numpy as np
 import math
+import mido, time
+from mido import Message, MidiFile, MidiTrack
 
 # functions defined for use in this repository, common to almost every script
 
@@ -77,3 +79,42 @@ def generate_signals(notes, k=8, amp=1.0, sr=44100):
         tri = np.append(tri, tri_signal_ADSR)
 
     return [hrm, sin, tri, notes]
+
+def create_midi_from_notes(note_list, output_file='output.mid', tempo=500000, time_signature=(4, 4)):
+    """
+    Create a MIDI file from a list of notes and durations.
+
+    Args:
+        note_list: List of tuples in format (note_number, duration_seconds)
+        output_file: Name of the output MIDI file
+        tempo: Microseconds per quarter note (default 500000 = 120 BPM)
+        time_signature: Tuple of (numerator, denominator)
+    """
+    # Create a new MIDI file and track
+    mid = MidiFile()
+    track = MidiTrack()
+    mid.tracks.append(track)
+
+    # Set tempo and time signature
+    track.append(mido.MetaMessage('set_tempo', tempo=tempo))
+    track.append(mido.MetaMessage('time_signature',
+                                 numerator=time_signature[0],
+                                 denominator=time_signature[1]))
+
+    # Convert seconds to ticks
+    ticks_per_beat = mid.ticks_per_beat
+    seconds_per_beat = tempo / 1_000_000  # Convert microseconds to seconds
+
+    for note, duration in note_list:
+        # Note on event (velocity=64 is a moderate volume)
+        track.append(Message('note_on', note=note, velocity=64, time=0))
+
+        # Calculate duration in ticks
+        duration_ticks = int((duration / seconds_per_beat) * ticks_per_beat)
+
+        # Note off event after the duration
+        track.append(Message('note_off', note=note, velocity=64, time=duration_ticks))
+
+    # Save the MIDI file
+    mid.save(output_file)
+    print(f"MIDI file saved as {output_file}")
