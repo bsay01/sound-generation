@@ -1,5 +1,7 @@
 __pycache__
 
+test.py
+
 data_img/**
 !data_img/placeholder.md
 !data_img/josie.jpg
