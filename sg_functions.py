@@ -2,6 +2,7 @@ import numpy as np
 import math
 import mido, time
 from mido import Message, MidiFile, MidiTrack
+import re
 
 # functions defined for use in this repository, common to almost every script
 
@@ -118,3 +119,39 @@ def create_midi_from_notes(note_list, output_file='output.mid', tempo=500000, ti
     # Save the MIDI file
     mid.save(output_file)
     print(f"MIDI file saved as {output_file}")
+
+def read_integers_from_file(filename: str) -> list[int]:
+    integers = []
+    try:
+        with open(filename, 'r', encoding='utf-8') as file:
+            contents = file.read()
+            tokens = re.split(r'\s+', contents) # Split on any whitespace
+            for token in tokens:
+                if re.fullmatch(r'-?\d+', token) is not None:
+                    integers.append(int(token))
+    except FileNotFoundError:
+        print(f"Error: File '{filename}' not found.")
+        raise
+    return integers
+
+# converts a list of values into a list of values corresponding to the new range
+def lov_to_new_range(l:list, old_min, old_max, new_min=0, new_max=6, format="i"):
+
+    new_min = float(new_min)
+    new_max = float(new_max)
+
+    # determine current range
+    #old_max = max(l)
+    #old_min = min(l)
+
+    # convert to new range
+    old_max -= old_min
+    r = new_max - new_min
+    l_zto_f = [(new_min + float((i-old_min)/old_max)*float(r)) for i in l]
+
+    if format == "i":
+        return [round(i) for i in l_zto_f]
+    elif format == "f":
+        return l_zto_f
+    else:
+        raise Exception("funky format wdym")

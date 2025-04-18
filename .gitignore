@@ -2,6 +2,7 @@ __pycache__
 
 data_img/**
 !data_img/placeholder.md
+!data_img/josie.jpg
 
 data_rand/**
 !data_rand/placeholder.md
@@ -11,3 +12,7 @@ data_sg/**
 
 data_drums/**
 !data_drums/placeholder.md
+
+data_txt/**
+!data_txt/placeholder.md
+!data_txt/input.txt

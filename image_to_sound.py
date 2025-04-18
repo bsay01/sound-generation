@@ -18,7 +18,6 @@ def RGB_to_HEXstr(R, G, B):
     return "0x" + h_s
 
 def image_to_px_array(image_name:str, format:str="jpg"):
-
     try:
         img = Image.open(image_name + "." + format) # open image
         px = list(img.getdata()) # get image pixel data
@@ -57,29 +56,7 @@ def a_to_tf(array, file_name:str):
             row_str += "]\n"
             tf.write(row_str)
 
-# converts a list of values into a list of values corresponding to the new range
-def lov_to_new_range(l:list, old_min, old_max, new_min=0, new_max=6, format="i"):
-
-    new_min = float(new_min)
-    new_max = float(new_max)
-
-    # determine current range
-    #old_max = max(l)
-    #old_min = min(l)
-
-    # convert to new range
-    old_max -= old_min
-    r = new_max - new_min
-    l_zto_f = [(new_min + float((i-old_min)/old_max)*float(r)) for i in l]
-
-    if format == "i":
-        return [round(i) for i in l_zto_f]
-    elif format == "f":
-        return l_zto_f
-    else:
-        raise Exception("funky format wdym")
-
-def main():
+def main() -> None:
 
     print()
 
