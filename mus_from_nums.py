@@ -1,39 +1,14 @@
-import numpy as np
-import IPython.display as ipd
 import matplotlib.pyplot as plt
 import soundfile as sf
-import music21
-import math
-import tkinter as tk
-from tkinter import messagebox
-import os
 import random
 from sg_functions import *
 
 def main() -> None:
 
-    #####################################################################################################
-    ############################################## DEFINES ##############################################
-    #####################################################################################################
-
-    SAMPLE_RATE = 44100
-    N_SINES = 100
-
-    TEMPO = 120
-    #tinyNotation_STRING = "4/4 e4. r8 d8 c# d8 r8 r4 chord{C2. e g} e1"
-
-    ADSR_DEMO_TITLE = "ADSR Functionality Graphs"
-
-    #####################################################################################################
-    ############################################### MAIN ################################################
-    #####################################################################################################
-
     ######################################## GEN RAND NOTES #########################################
 
-    sr = 44100
-
     #- specify info about note stream
-    n_amp = 1
+    n_amp = 0.7
     n_k = 8
     #ns_dur = [100, 100] # note duration range - see line 58
     ns_dur = 75
@@ -41,6 +16,8 @@ def main() -> None:
     # A MAJ
     # A4 (440 Hz), B4 (493.88 Hz), C5 (523.25 Hz), D5 (587.33 Hz), E5 (659.25 Hz), F#5 (739.99 Hz), G5 (783.99 Hz)
     ns_options = [440, 493.88, 523.25, 587.33, 659.25, 739.99, 783.99]
+
+    ns_options = [n / 4 for n in ns_options]
 
     # parse text file - must be a bunch of integers separated by any whitespace
     input_data = read_integers_from_file("data_txt/input.txt")
@@ -53,7 +30,7 @@ def main() -> None:
 
     normalized_input_data = lov_to_new_range(input_data, min(input_data), max(input_data), new_min=0, new_max=6)
 
-    # generate a list of pairs of random notes in the given scale with a random duration
+    # generate a list of pairs of notes and durations
     ns_values = []
     for i in normalized_input_data:
         frequency = ns_options[i]
@@ -64,7 +41,7 @@ def main() -> None:
     ######################################## GEN SIGNAL #########################################
 
     #print(ns_values)
-    out = generate_signals(ns_values, amp=0.7)
+    out = generate_signals(ns_values, amp=n_amp, sr=SAMPLE_RATE, k=n_k)
     hrm = out[0]
     sin = out[1]
     tri = out[2]
@@ -81,19 +58,19 @@ def main() -> None:
     create_midi_from_notes([(freq2midi(n[0]), n[1]) for n in ns_values], output_dir + "midi_data.mid")
 
     try:
-        sf.write(output_dir + "hrm_txt.wav", hrm, sr)
+        sf.write(output_dir + "hrm_txt.wav", hrm, SAMPLE_RATE)
     except:
-        sf.write("hrm_txt.wav", hrm, sr)
+        sf.write("hrm_txt.wav", hrm, SAMPLE_RATE)
 
     try:
-        sf.write(output_dir + "sin_txt.wav", sin, sr)
+        sf.write(output_dir + "sin_txt.wav", sin, SAMPLE_RATE)
     except:
-        sf.write("sin_txt.wav", sin, sr)
+        sf.write("sin_txt.wav", sin, SAMPLE_RATE)
 
     try:
-        sf.write(output_dir + "tri_txt.wav", tri, sr)
+        sf.write(output_dir + "tri_txt.wav", tri, SAMPLE_RATE)
     except:
-        sf.write("tri_txt.wav", tri, sr)
+        sf.write("tri_txt.wav", tri, SAMPLE_RATE)
 
     ######################################### GRAPH OUTPUT ##########################################
 

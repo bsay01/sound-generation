@@ -6,8 +6,10 @@ import re
 
 # functions defined for use in this repository, common to almost every script
 
+SAMPLE_RATE = 44100
+
 def freq2midi(freq: float):
-    return int(12 * math.log2(freq/440) + 69) if freq > 0 else -1
+    return int(12 * math.log2(freq/440) + 69) if freq > 0 else 0
 
 def midi2freq(note_num: int):
     return 440 * pow(2, (note_num - 69) / 12) if note_num >= 0 and note_num < 128 else 0
@@ -42,12 +44,12 @@ def generate_ADSR_envelope(duration:float, A:float=0.04, D:float=0.06, S:float=0
     release = np.array([(-last/R*i+last) for i in np.arange(0,        R, 1.0/sr)])
     return np.array([i*100 for i in np.append(ADS, release)])
 
-def generate_signals(notes, k=8, amp=1.0, sr=44100):
+def generate_signals(notes, k=8, amp=1.0, sr=44100, A=0.04, D=0.06, S=0.6, R=0.05):
 
     hrm = sin = tri = np.array([])
     for note in notes:
 
-        ADSR = generate_ADSR_envelope(note[1], 0.04, 0.06, 0.6, 0.05)
+        ADSR = generate_ADSR_envelope(note[1], A, D, S, R, sr=sr)
         ADSR_len = len(ADSR)
         ADSR_duration = ADSR_len / sr
 
@@ -55,18 +57,26 @@ def generate_signals(notes, k=8, amp=1.0, sr=44100):
         sin_signal = 0*ADSR
         tri_signal = 0*ADSR
         for f_i in [note[0]]:
-            h = k_harmonics(k=k, amp=amp, freq=f_i, duration=ADSR_duration, sr=sr)
-            s = generate_sine(note_num=freq2midi(f_i), duration=ADSR_duration, sr=sr)
-            t = generate_triangle(note_num=freq2midi(f_i), duration=ADSR_duration, num_sinusoids=1000, sr=sr)
-            while len(hrm_signal) < len(h):
-                hrm_signal = np.append(hrm_signal, [0])
-            while len(sin_signal) < len(s):
-                sin_signal = np.append(sin_signal, [0])
-            while len(tri_signal) < len(t):
-                tri_signal = np.append(tri_signal, [0])
-            hrm_signal = np.add(hrm_signal, h)
-            sin_signal = np.add(sin_signal, s)
-            tri_signal = np.add(tri_signal, t)
+            if f_i != 0:
+                h = k_harmonics(k=k, amp=amp, freq=f_i, duration=ADSR_duration, sr=sr)
+                s = generate_sine(note_num=freq2midi(f_i), duration=ADSR_duration, sr=sr)
+                t = generate_triangle(note_num=freq2midi(f_i), duration=ADSR_duration, num_sinusoids=1000, sr=sr)
+                while len(hrm_signal) < len(h):
+                    hrm_signal = np.append(hrm_signal, [0])
+                while len(sin_signal) < len(s):
+                    sin_signal = np.append(sin_signal, [0])
+                while len(tri_signal) < len(t):
+                    tri_signal = np.append(tri_signal, [0])
+                hrm_signal = np.add(hrm_signal, h)
+                sin_signal = np.add(sin_signal, s)
+                tri_signal = np.add(tri_signal, t)
+            else:
+                s = 0.0*np.arange(0, ADSR_duration, 1.0/sr)
+                while len(sin_signal) < len(s):
+                    sin_signal = np.append(sin_signal, [0])
+                hrm_signal = np.add(sin_signal, s)
+                sin_signal = np.add(sin_signal, s)
+                tri_signal = np.add(sin_signal, s)
 
         r_ADSR = np.array([i/100 for i in ADSR])
         while len(r_ADSR) < len(hrm_signal):

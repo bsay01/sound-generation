@@ -18,3 +18,6 @@ data_drums/**
 data_txt/**
 !data_txt/placeholder.md
 !data_txt/input.txt
+
+data_haiku/**
+!data_haiku/placeholder.md
