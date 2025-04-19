@@ -14,7 +14,7 @@ def freq2midi(freq: float):
 def midi2freq(note_num: int):
     return 440 * pow(2, (note_num - 69) / 12) if note_num >= 0 and note_num < 128 else 0
 
-def generate_triangle(note_num: int, duration: float, num_sinusoids: int, sr: int):
+def generate_triangle(note_num: int, amp: float, duration: float, num_sinusoids: int, sr: int):
     freq = midi2freq(note_num)
     t = np.arange(0, duration, 1.0/sr)
     output = 0*t
@@ -22,10 +22,10 @@ def generate_triangle(note_num: int, duration: float, num_sinusoids: int, sr: in
         n = 2*i+1
         new_harm = (pow(-1,i)/pow(n,2)) * np.sin(2*np.pi*freq*n*t)
         output = np.add(output, new_harm)
-    return np.multiply(output, 8/pow(np.pi,2))
+    return np.multiply(output, amp*8/pow(np.pi,2))
 
-def generate_sine(note_num: int, duration: float, sr: int):
-    return np.sin(2*np.pi*midi2freq(note_num)*np.arange(0, duration, 1.0/sr))
+def generate_sine(note_num: int, amp: float, duration: float, sr: int):
+    return amp*np.sin(2*np.pi*midi2freq(note_num)*np.arange(0, duration, 1.0/sr))
 
 def k_harmonics(k, amp, freq, duration, sr):
     silent_seg = 0 * np.arange(0, duration, 1.0/sr)
@@ -59,8 +59,8 @@ def generate_signals(notes, k=8, amp=1.0, sr=44100, A=0.04, D=0.06, S=0.6, R=0.0
         for f_i in [note[0]]:
             if f_i != 0:
                 h = k_harmonics(k=k, amp=amp, freq=f_i, duration=ADSR_duration, sr=sr)
-                s = generate_sine(note_num=freq2midi(f_i), duration=ADSR_duration, sr=sr)
-                t = generate_triangle(note_num=freq2midi(f_i), duration=ADSR_duration, num_sinusoids=1000, sr=sr)
+                s = generate_sine(note_num=freq2midi(f_i), amp=amp, duration=ADSR_duration, sr=sr)
+                t = generate_triangle(note_num=freq2midi(f_i), amp=amp, duration=ADSR_duration, num_sinusoids=1000, sr=sr)
                 while len(hrm_signal) < len(h):
                     hrm_signal = np.append(hrm_signal, [0])
                 while len(sin_signal) < len(s):

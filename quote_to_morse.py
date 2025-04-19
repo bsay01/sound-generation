@@ -53,6 +53,8 @@ def string_to_morse_tones(input_string, dit_len_ms=100, frequency=600):
         for i in range(2):
             note_values.append([0, dit_len_s])
 
+    return note_values
+
 def main() -> None:
 
     ######################################## GEN RAND NOTES #########################################
@@ -60,7 +62,7 @@ def main() -> None:
     #- specify info about note stream
     amplitude = 0.7
     n_k = 8
-    freq = 220*2 # A Maj - 220, 277.18, 330
+    freq = 277.18*2 # A Maj - 220, 277.18, 330
     dit_len_ms = 100
 
     # parse text file - must be a bunch of integers separated by any whitespace
@@ -73,8 +75,8 @@ def main() -> None:
     input_tones3 = string_to_morse_tones(input_string3, dit_len_ms=dit_len_ms, frequency=freq)
 
     # choose input string here to indicate the string you want and a suffix for the output files
-    file_suffix = "camus"
-    ns_values = input_tones1
+    file_suffix = "stafford"
+    ns_values = input_tones2
 
     ######################################## GEN SIGNAL #########################################
 
@@ -87,7 +89,7 @@ def main() -> None:
 
     ######################################## MAKE WAV FILES #########################################
 
-    output_dir = "data_haiku/"
+    output_dir = "data_quote/"
 
     with open(output_dir + "data_" + file_suffix + ".txt", "w") as tf:
         for n in ns_values:
