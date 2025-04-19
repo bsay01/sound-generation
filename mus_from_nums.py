@@ -5,7 +5,7 @@ from sg_functions import *
 
 def main() -> None:
 
-    ######################################## GEN RAND NOTES #########################################
+    ######################################## SET UP NOTE STREAM #########################################
 
     #- specify info about note stream
     n_amp = 0.7

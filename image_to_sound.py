@@ -1,11 +1,8 @@
-import numpy as np
-import matplotlib.pyplot as plt
 from PIL import Image
 import soundfile as sf
 from sg_functions import *
 import math, winsound, time
 
-SAMPLE_RATE = 44100
 ns_dur = [50, 300] # note duration range
 output_dir = "data_img/"
 

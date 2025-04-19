@@ -1,6 +1,6 @@
 import numpy as np
 import math
-import mido, time
+import mido
 from mido import Message, MidiFile, MidiTrack
 import re
 

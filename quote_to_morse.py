@@ -57,7 +57,7 @@ def string_to_morse_tones(input_string, dit_len_ms=100, frequency=600):
 
 def main() -> None:
 
-    ######################################## GEN RAND NOTES #########################################
+    ######################################## SET UP NOTE STREAM #########################################
 
     #- specify info about note stream
     amplitude = 0.7
